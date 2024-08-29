@@ -1,0 +1,64 @@
+server:
+  port: 8888
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/product_source
+    username: root
+    password: 279464
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+servlet:
+  multipart:
+    max-file-size: 30MB
+    max-request-size: 30MB
+
+mybatis:
+  mapper-locations: classpath:mappers/**/*.xml
+  type-aliases-package: com.briup.product_source.bean
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+logging:
+  level:
+    com.briup: debug
+    com.zaxxer: error
+    org.springframework.jdbc: debug
+swagger:
+  enabled: true
+  base-package: com.briup.product_source
+  title: 智慧农业养殖朔源管理系统
+
+  description: 在这里，母猪与王思都可以快乐成长
+  contact:
+    name: wct
+    email: wct@briup.com
+    url: www.briup.com
+  authorization:
+    key-name: token
+    auth-regex: ^(?!/login$).+$
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+
+upload:
+  filePath: D:\product_source\images
+  serverPath: http://localhost:8000/images
+
+
+file:
+  upload:
+    dir: D:\product_source\images
+    ip: 127.0.0.1
+    port: 8000
+    url: /images
+
+oos:
+  accessKey: WdfBzSGxAWY-ThQV_-Ez9P8slYSB1lHQ2CIWBxXi
+  secretKey: 00SYVNZb-b6bvx4vlMki4p18MNp99_5UKTH4wxCH
+  bucket: product-source-wct

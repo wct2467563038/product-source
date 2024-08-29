@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.briup.product_source.dao.ext.AnalysisMapper">
+
+    <select id="countByList" resultType="java.lang.Integer">
+        select count(*) from manager_fence_house
+        UNION ALL
+        select count(*) from manager_hurdles
+        UNION ALL
+        select count(*) from manager_animal
+        UNION ALL
+        select count(*) from manager_freezer
+        UNION ALL
+        select count(*) from base_account
+    </select>
+    <select id="countByMap" resultType="java.util.Map">
+        select "栏舍" as name, count(*) as num from manager_fence_house
+        UNION ALL
+        select "栏圈", count(*) from manager_hurdles
+        UNION ALL
+        select "动物" ,count(*) from manager_animal
+        UNION ALL
+        select "冷库" ,count(*) from manager_freezer
+        UNION ALL
+        select "员工", count(*) from base_account
+    </select>
+    <select id="countByMapAndList" resultType="java.util.Map">
+        select "栏舍" as name, count(*) as num from manager_fence_house
+        UNION ALL
+        select "栏圈", count(*) from manager_hurdles
+        UNION ALL
+        select "动物" ,count(*) from manager_animal
+        UNION ALL
+        select "冷库" ,count(*) from manager_freezer
+        UNION ALL
+        select "员工", count(*) from base_account
+    </select>
+    <select id="countWeightMap" resultType="java.util.Map">
+        select sum(IF(a_weight <![CDATA[<]]> 30,1,0)) as "30以下",
+        sum(IF(a_weight >50,1,0)) as "50以上",
+        sum(IF(a_weight >=30 and a_weight <![CDATA[<]]>50,1,0)) as "30~50"
+        from manager_animal;
+    </select>
+    <select id="countWeightList" resultType="java.util.Map">
+        select sum(IF(a_weight <![CDATA[<]]> 30,1,0)) as "30以下",
+        sum(IF(a_weight >50,1,0)) as "50以上",
+        sum(IF(a_weight >=30 and a_weight <![CDATA[<]]>50,1,0)) as "30~50"
+        from manager_animal;
+    </select>
+    <select id="countDiseasetMap" resultType="java.util.Map">
+        SELECT b.d_name as name ,count(a.dr_d_id) as num FROM disease_record a
+        left JOIN manager_disease b
+        on a.dr_d_id = b.d_id
+        GROUP BY b.d_name
+    </select>
+
+
+
+    <resultMap id="resultDiseaset" type="map">
+        <result property="key" column="names"/>
+        <result property="value" column="nums"/>
+    </resultMap>
+    <select id="countDiseasetMap2" resultMap="resultDiseaset">
+        SELECT b.d_name as names ,count(a.dr_d_id) as nums FROM disease_record a
+         left JOIN manager_disease b
+         on a.dr_d_id = b.d_id
+        GROUP BY b.d_name
+    </select>
+    <select id="countSales" resultType="java.util.Map">
+        select  month(isr_time) as month,sum(isr_num)  as num from issue_record
+        where year(isr_time) = year(sysdate())
+        GROUP BY month(isr_time)
+    </select>
+
+</mapper>

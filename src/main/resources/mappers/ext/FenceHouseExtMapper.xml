@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.briup.product_source.dao.ext.FenceHouseExtMapper">
+    <delete id="deleteByIds">
+        delete from manager_fence_house
+        where
+        <foreach collection="list" item="id" open="id in (" separator="," close=")">
+            #{id}
+        </foreach>>
+    </delete>
+    <select id="selectByName" resultMap="com.briup.product_source.dao.basic.FenceHouseMapper.BaseResultMap">
+        select <include refid="com.briup.product_source.dao.basic.FenceHouseMapper.Base_Column_List"/> from manager_fence_house
+        <where>
+            <if test="fhName != null and fhName != ''">
+                fh_name like concat('%',#{fhName},'%')
+            </if>
+        </where>
+    </select>
+
+
+    <!--2.编写结果集映射： 栏舍映射问题-->
+    <resultMap id="fhResultMap" type="fenceHouseExt" extends="com.briup.product_source.dao.basic.FenceHouseMapper.BaseResultMap">
+        <!--1：N标签-->
+        <collection property="hurdlesList" resultMap="com.briup.product_source.dao.basic.HurdlesMapper.BaseResultMap"/>
+    </resultMap>
+    <!--1.编写sql-->
+    <select id="selectWithHurdlesById" resultMap="fhResultMap">
+        select a.*,b.* from  manager_fence_house a
+                                 left join manager_hurdles b
+                                           on a.fh_id = b.h_fence_id
+        where a.fh_id = #{id}
+    </select>
+
+</mapper>
